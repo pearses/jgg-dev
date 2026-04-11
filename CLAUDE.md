@@ -161,6 +161,10 @@ All active payment links are configured with:
 - ✅ Shipping address restricted to AU, DE, JP
 - ✅ Standard Shipping — Free, 6–10 business days (one-time link only; Stripe doesn't support shipping options on subscription payment links)
 
+Current live Stripe link for 12-pack white (single purchase): `https://buy.stripe.com/3cI5kF50PcDv6PDehc83C0k`
+
+Membership subscription links are in `membership/index.html` in the `STRIPE_LINKS` JS object.
+
 ## Images
 
 ### Active image files
