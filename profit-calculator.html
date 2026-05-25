@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JGG — Profit Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #111111;
+      --white: #ffffff;
+      --green: #c8e617;
+      --grey:  #f5f5f5;
+      --muted: #666666;
+      --border: #e0e0e0;
+      --red:   #ff5a5a;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--grey);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      background: var(--black);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header .logo-text {
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .page-header .sep { color: rgba(255,255,255,0.25); }
+    .page-header .page-title {
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--green);
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+      margin-right: 8px;
+    }
+
+    /* ── Drop zone ── */
+    .drop-zone-wrap { position: relative; }
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 28px 20px;
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+      cursor: pointer;
+      position: relative;
+    }
+    .drop-zone.drag-over {
+      border-color: var(--green);
+      background: rgba(200,230,23,0.06);
+    }
+    .drop-zone.success {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.06);
+    }
+    .drop-zone-icon { font-size: 28px; margin-bottom: 8px; }
+    .drop-zone-label { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .drop-zone-sub { font-size: 12px; color: var(--muted); }
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .template-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--black);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .image-strip {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .image-thumb {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .image-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .image-thumb .dismiss {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 18px;
+      height: 18px;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Product table ── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      padding: 0 8px 10px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    td {
+      padding: 5px 8px;
+      border-top: 1px solid var(--grey);
+      vertical-align: middle;
+    }
+    td input[type="text"],
+    td input[type="number"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--black);
+      background: var(--white);
+      transition: border-color 0.15s;
+    }
+    td input[type="text"]:focus,
+    td input[type="number"]:focus {
+      outline: none;
+      border-color: var(--black);
+    }
+    td input[type="number"] { text-align: right; }
+    .td-name input { min-width: 150px; }
+    .td-num  input { min-width: 90px; }
+
+    .btn-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ccc;
+      font-size: 20px;
+      line-height: 1;
+      padding: 2px 6px;
+      transition: color 0.15s;
+    }
+    .btn-remove:hover { color: var(--red); }
+    .btn-add {
+      margin-top: 14px;
+      background: none;
+      border: 1.5px dashed var(--border);
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .btn-add:hover { border-color: var(--black); color: var(--black); }
+
+    /* ── Cost settings ── */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .setting-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap .prefix,
+    .input-wrap .suffix {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .input-wrap .prefix { left: 11px; }
+    .input-wrap .suffix { right: 11px; }
+    .input-wrap input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--black);
+      transition: border-color 0.15s;
+    }
+    .input-wrap.has-prefix input { padding-left: 26px; }
+    .input-wrap.has-suffix input { padding-right: 28px; }
+    .input-wrap input:focus { outline: none; border-color: var(--black); }
+
+    /* ── Results ── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .result-card {
+      background: var(--grey);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .result-card.highlight {
+      background: var(--black);
+      color: var(--white);
+    }
+    .result-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .result-card.highlight .result-card-title { color: rgba(255,255,255,0.45); }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .result-row .lbl { color: var(--muted); }
+    .result-card.highlight .result-row .lbl { color: rgba(255,255,255,0.5); }
+    .result-row .val { font-weight: 600; }
+    .result-row.neg .val { color: var(--red); }
+    .result-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 0;
+    }
+    .result-card.highlight .result-divider { border-color: rgba(255,255,255,0.1); }
+    .result-net {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .result-net .net-lbl { font-size: 13px; font-weight: 600; }
+    .result-net .net-val {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .result-margin {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 3px;
+    }
+    .result-card.highlight .result-margin { color: rgba(255,255,255,0.4); }
+
+    /* ── Sponsorship ── */
+    .sponsor-top {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .sponsor-budget-display {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+    .sponsor-budget-sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .slider-wrap { flex: 1; min-width: 200px; }
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--black);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .sponsor-tiers { display: flex; flex-direction: column; gap: 10px; }
+    .sponsor-tier {
+      display: grid;
+      grid-template-columns: 1fr 160px 80px;
+      gap: 12px;
+      align-items: center;
+      background: var(--grey);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .sponsor-tier input[type="text"],
+    .sponsor-tier input[type="number"] {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--black);
+      background: var(--white);
+      width: 100%;
+    }
+    .sponsor-tier input[type="number"] { padding-left: 22px; }
+    .sponsor-tier input:focus { outline: none; border-color: var(--black); }
+    .sponsor-tier .cost-wrap { position: relative; }
+    .sponsor-tier .cost-prefix {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .sponsor-result { text-align: right; }
+    .sponsor-result .player-count { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+    .sponsor-result .player-lbl { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .sponsor-callout {
+      background: var(--green);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 14px;
+      display: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .results-grid  { grid-template-columns: 1fr; }
+      .settings-grid { grid-template-columns: 1fr 1fr; }
+      .sponsor-tier  { grid-template-columns: 1fr 130px 70px; }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 16px 12px; }
+      .card { padding: 16px; }
+      .settings-grid { grid-template-columns: 1fr; }
+      .sponsor-tier  { grid-template-columns: 1fr; }
+      .page-header { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <span class="logo-text">JGG</span>
+  <span class="sep">—</span>
+  <span class="page-title">Profit Calculator</span>
+</header>
+
+<div class="container">
+
+  <!-- ── Import ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Import Data</div>
+    </div>
+    <div class="drop-zone-wrap">
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-icon">📂</div>
+        <div class="drop-zone-label">Drop a CSV or invoice image here</div>
+        <div class="drop-zone-sub">CSV auto-fills the product table &nbsp;·&nbsp; Images display as reference thumbnails</div>
+        <input type="file" id="fileInput" accept=".csv,image/*" multiple>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <span class="template-link" id="templateLink">Download CSV template</span>
+    </div>
+    <div class="image-strip" id="imageStrip"></div>
+  </div>
+
+  <!-- ── Stock & Sales ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="section-badge">1</span>Stock &amp; Sales</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Units Purchased</th>
+            <th>Cost / Unit (AUD)</th>
+            <th>Units Sold</th>
+            <th>Retail Price / Unit (AUD)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <button class="btn-add" id="addRowBtn">+ Add product</button>
+  </div>
+
+  <!-- ── Cost Settings ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="section-badge">2</span>Cost Settings</div>
+    </div>
+    <div class="settings-grid">
+      <div class="setting-field">
+        <label>Stripe Fee %</label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="stripePct" step="0.01" min="0" value="1.75">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+      <div class="setting-field">
+        <label>Stripe Fixed Fee / Transaction</label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="stripeFixed" step="0.01" min="0" value="0.30">
+        </div>
+      </div>
+      <div class="setting-field">
+        <label>Avg Shipping Cost / Order</label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="shippingCost" step="0.01" min="0" value="0.00">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Results ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="section-badge">3</span>Results</div>
+    </div>
+    <div class="results-grid">
+
+      <div class="result-card">
+        <div class="result-card-title">Already Sold</div>
+        <div class="result-row">
+          <span class="lbl">Gross revenue</span>
+          <span class="val" id="r-gross">$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Cost of goods</span>
+          <span class="val" id="r-cogs">−$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Stripe fees</span>
+          <span class="val" id="r-stripe">−$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Shipping</span>
+          <span class="val" id="r-ship">−$0.00</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-net">
+          <span class="net-lbl">Net profit</span>
+          <span class="net-val" id="r-net">$0.00</span>
+        </div>
+        <div class="result-margin" id="r-margin"></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-title">Remaining Stock</div>
+        <div class="result-row">
+          <span class="lbl">Units on hand</span>
+          <span class="val" id="r-remUnits">0</span>
+        </div>
+        <div class="result-row">
+          <span class="lbl">Proj. gross revenue</span>
+          <span class="val" id="r-remGross">$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Cost of goods</span>
+          <span class="val" id="r-remCogs">−$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Stripe fees</span>
+          <span class="val" id="r-remStripe">−$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Shipping</span>
+          <span class="val" id="r-remShip">−$0.00</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-net">
+          <span class="net-lbl">Proj. net profit</span>
+          <span class="net-val" id="r-remNet">$0.00</span>
+        </div>
+        <div class="result-margin" id="r-remMargin"></div>
+      </div>
+
+      <div class="result-card highlight">
+        <div class="result-card-title">Total (Sold + Remaining)</div>
+        <div class="result-row">
+          <span class="lbl">Combined gross</span>
+          <span class="val" id="r-totGross">$0.00</span>
+        </div>
+        <div class="result-row neg">
+          <span class="lbl">Total costs</span>
+          <span class="val" id="r-totCosts">−$0.00</span>
+        </div>
+        <hr class="result-divider">
+        <div class="result-net">
+          <span class="net-lbl">Combined profit</span>
+          <span class="net-val" id="r-totNet">$0.00</span>
+        </div>
+        <div class="result-margin" id="r-totMargin"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Sponsorship ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="section-badge">4</span>Sponsorship Budget</div>
+    </div>
+    <div class="sponsor-top">
+      <div>
+        <div class="sponsor-budget-display" id="sponsorDollar">$0</div>
+        <div class="sponsor-budget-sub" id="sponsorSub">0% of total profit</div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-label-row">
+          <span>0%</span>
+          <span id="sliderPctLabel">0%</span>
+          <span>50%</span>
+        </div>
+        <input type="range" id="sponsorSlider" min="0" max="50" step="1" value="0">
+      </div>
+    </div>
+    <div class="sponsor-tiers" id="sponsorTiers"></div>
+    <div class="sponsor-callout" id="sponsorCallout"></div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── Default state ──────────────────────────────────────────
+const DEFAULTS = {
+  rows: [{ id: 1, name: '12-Pack White', unitsBought: '', costPerUnit: '', unitsSold: '', retailPrice: '32.98' }],
+  nextId: 2,
+  stripePct: 1.75,
+  stripeFixed: 0.30,
+  shippingCost: 0,
+  sponsorPct: 0,
+  tiers: [
+    { label: 'Local amateur trip', cost: 200 },
+    { label: 'National comp trip', cost: 800 },
+    { label: 'Professional player trip', cost: 3000 },
+  ],
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULTS));
+state.images = []; // object URLs — not persisted
+
+// ── Persistence ────────────────────────────────────────────
+function save() {
+  try {
+    const { images: _omit, ...toSave } = state;
+    localStorage.setItem('jgg_calc_v1', JSON.stringify(toSave));
+  } catch {}
+}
+function load() {
+  try {
+    const raw = localStorage.getItem('jgg_calc_v1');
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    state = { ...state, ...saved, images: [] };
+  } catch {}
+}
+
+// ── Helpers ────────────────────────────────────────────────
+function money(v) {
+  return '$' + Math.abs(v).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function signed(v) {
+  return (v < 0 ? '−' : '') + money(v);
+}
+function marginStr(net, gross) {
+  if (gross === 0) return '';
+  return (net / gross * 100).toFixed(1) + '% margin';
+}
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// ── Calculations ───────────────────────────────────────────
+function calcBlock(units, costPerUnit, retailPrice) {
+  const gross  = units * retailPrice;
+  const cogs   = units * costPerUnit;
+  const stripe = units > 0
+    ? (gross * state.stripePct / 100) + (units * state.stripeFixed)
+    : 0;
+  const ship   = units * state.shippingCost;
+  return { gross, cogs, stripe, ship, net: gross - cogs - stripe - ship };
+}
+
+function calcTotals() {
+  let sold = { gross:0, cogs:0, stripe:0, ship:0, net:0 };
+  let rem  = { gross:0, cogs:0, stripe:0, ship:0, net:0, units:0 };
+
+  state.rows.forEach(row => {
+    const bought = Math.max(0, +row.unitsBought || 0);
+    const soldU  = Math.max(0, Math.min(+row.unitsSold || 0, bought));
+    const remU   = bought - soldU;
+    const cost   = +row.costPerUnit  || 0;
+    const retail = +row.retailPrice  || 0;
+
+    const s = calcBlock(soldU, cost, retail);
+    const r = calcBlock(remU,  cost, retail);
+
+    Object.keys(sold).forEach(k => { sold[k] += s[k]; });
+    Object.keys(rem).filter(k => k !== 'units').forEach(k => { rem[k] += r[k]; });
+    rem.units += remU;
+  });
+
+  const totGross = sold.gross + rem.gross;
+  const totCosts = (sold.cogs + sold.stripe + sold.ship) + (rem.cogs + rem.stripe + rem.ship);
+  const totNet   = sold.net + rem.net;
+
+  return { sold, rem, totGross, totCosts, totNet };
+}
+
+// ── Render ─────────────────────────────────────────────────
+function render() {
+  renderTable();
+  renderResults();
+  renderSponsorship();
+  save();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  state.rows.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td class="td-name"><input type="text"   value="${esc(row.name)}"        data-id="${row.id}" data-f="name"        placeholder="Product name"></td>` +
+      `<td class="td-num"><input  type="number" value="${esc(row.unitsBought)}" data-id="${row.id}" data-f="unitsBought" placeholder="0"    min="0"></td>` +
+      `<td class="td-num"><input  type="number" value="${esc(row.costPerUnit)}" data-id="${row.id}" data-f="costPerUnit" placeholder="0.00" min="0" step="0.01"></td>` +
+      `<td class="td-num"><input  type="number" value="${esc(row.unitsSold)}"   data-id="${row.id}" data-f="unitsSold"   placeholder="0"    min="0"></td>` +
+      `<td class="td-num"><input  type="number" value="${esc(row.retailPrice)}" data-id="${row.id}" data-f="retailPrice" placeholder="0.00" min="0" step="0.01"></td>` +
+      `<td><button class="btn-remove" data-id="${row.id}" title="Remove row">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderResults() {
+  const { sold, rem, totGross, totCosts, totNet } = calcTotals();
+
+  // Sold column
+  document.getElementById('r-gross').textContent  = money(sold.gross);
+  document.getElementById('r-cogs').textContent   = '−' + money(sold.cogs);
+  document.getElementById('r-stripe').textContent = '−' + money(sold.stripe);
+  document.getElementById('r-ship').textContent   = '−' + money(sold.ship);
+  const netEl = document.getElementById('r-net');
+  netEl.textContent  = signed(sold.net);
+  netEl.style.color  = sold.net >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('r-margin').textContent = marginStr(sold.net, sold.gross);
+
+  // Remaining column
+  document.getElementById('r-remUnits').textContent  = rem.units;
+  document.getElementById('r-remGross').textContent  = money(rem.gross);
+  document.getElementById('r-remCogs').textContent   = '−' + money(rem.cogs);
+  document.getElementById('r-remStripe').textContent = '−' + money(rem.stripe);
+  document.getElementById('r-remShip').textContent   = '−' + money(rem.ship);
+  const remNetEl = document.getElementById('r-remNet');
+  remNetEl.textContent = signed(rem.net);
+  remNetEl.style.color = rem.net >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('r-remMargin').textContent = marginStr(rem.net, rem.gross);
+
+  // Total column
+  document.getElementById('r-totGross').textContent  = money(totGross);
+  document.getElementById('r-totCosts').textContent  = '−' + money(totCosts);
+  const totEl = document.getElementById('r-totNet');
+  totEl.textContent = signed(totNet);
+  totEl.style.color = totNet >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('r-totMargin').textContent = marginStr(totNet, totGross);
+}
+
+function renderSponsorship() {
+  const { totNet } = calcTotals();
+  const totalProfit = Math.max(0, totNet);
+  const pct    = state.sponsorPct;
+  const budget = totalProfit * pct / 100;
+
+  document.getElementById('sponsorDollar').textContent   = money(budget);
+  document.getElementById('sponsorSub').textContent      = pct + '% of total profit';
+  document.getElementById('sliderPctLabel').textContent  = pct + '%';
+
+  const tiersEl = document.getElementById('sponsorTiers');
+  tiersEl.innerHTML = '';
+  state.tiers.forEach((tier, i) => {
+    const count = tier.cost > 0 ? Math.floor(budget / tier.cost) : 0;
+    const div = document.createElement('div');
+    div.className = 'sponsor-tier';
+    div.innerHTML =
+      `<input type="text" value="${esc(tier.label)}" data-ti="${i}" data-f="label" placeholder="Tier name">` +
+      `<div class="cost-wrap"><span class="cost-prefix">$</span>` +
+      `<input type="number" value="${tier.cost}" data-ti="${i}" data-f="cost" step="50" min="0"></div>` +
+      `<div class="sponsor-result">` +
+      `<div class="player-count">${count}</div>` +
+      `<div class="player-lbl">player${count !== 1 ? 's' : ''}</div>` +
+      `</div>`;
+    tiersEl.appendChild(div);
+  });
+
+  // Pro callout
+  const pro      = state.tiers[2];
+  const proCount = pro && pro.cost > 0 ? Math.floor(budget / pro.cost) : 0;
+  const callout  = document.getElementById('sponsorCallout');
+  if (proCount >= 1) {
+    callout.style.display = 'block';
+    callout.textContent = '🎾 Budget supports ' + proCount
+      + ' professional player' + (proCount > 1 ? 's' : '')
+      + ' at ' + money(pro.cost) + ' each.';
+  } else {
+    callout.style.display = 'none';
+  }
+}
+
+function renderImages() {
+  const strip = document.getElementById('imageStrip');
+  strip.innerHTML = '';
+  state.images.forEach((img, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'image-thumb';
+    wrap.innerHTML =
+      `<img src="${img.url}" alt="${esc(img.name)}" title="${esc(img.name)}">` +
+      `<button class="dismiss" data-img="${i}" title="Remove">×</button>`;
+    strip.appendChild(wrap);
+  });
+}
+
+// ── Event delegation ───────────────────────────────────────
+document.getElementById('tableBody').addEventListener('input', e => {
+  const el = e.target;
+  const id = +el.dataset.id;
+  const f  = el.dataset.f;
+  if (!id || !f) return;
+  const row = state.rows.find(r => r.id === id);
+  if (row) { row[f] = el.value; render(); }
+});
+
+document.getElementById('tableBody').addEventListener('click', e => {
+  const btn = e.target.closest('.btn-remove');
+  if (!btn) return;
+  const id = +btn.dataset.id;
+  if (state.rows.length > 1) {
+    state.rows = state.rows.filter(r => r.id !== id);
+    render();
+  }
+});
+
+document.getElementById('addRowBtn').addEventListener('click', () => {
+  state.rows.push({ id: state.nextId++, name: '', unitsBought: '', costPerUnit: '', unitsSold: '', retailPrice: '32.98' });
+  render();
+});
+
+['stripePct', 'stripeFixed', 'shippingCost'].forEach(key => {
+  document.getElementById(key).addEventListener('input', e => {
+    state[key] = +e.target.value || 0;
+    render();
+  });
+});
+
+document.getElementById('sponsorSlider').addEventListener('input', e => {
+  state.sponsorPct = +e.target.value;
+  renderSponsorship();
+  save();
+});
+
+document.getElementById('sponsorTiers').addEventListener('input', e => {
+  const el = e.target;
+  const i  = el.dataset.ti;
+  const f  = el.dataset.f;
+  if (i === undefined || !f) return;
+  state.tiers[+i][f] = f === 'cost' ? (+el.value || 0) : el.value;
+  renderSponsorship();
+  save();
+});
+
+document.getElementById('imageStrip').addEventListener('click', e => {
+  const btn = e.target.closest('.dismiss');
+  if (!btn) return;
+  URL.revokeObjectURL(state.images[+btn.dataset.img].url);
+  state.images.splice(+btn.dataset.img, 1);
+  renderImages();
+});
+
+// ── CSV parsing ────────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  if (!lines.length) return;
+
+  // Skip header row when first column is non-numeric
+  const firstCells = lines[0].split(',');
+  const skip = isNaN(parseFloat(firstCells[1])) && isNaN(parseFloat(firstCells[0]));
+  const data = skip ? lines.slice(1) : lines;
+  if (!data.length) return;
+
+  state.rows = data.map(line => {
+    const cols = line.split(',').map(c => c.trim().replace(/^["']|["']$/g, ''));
+    return {
+      id:          state.nextId++,
+      name:        cols[0] || '',
+      unitsBought: cols[1] || '',
+      costPerUnit: cols[2] || '',
+      unitsSold:   cols[3] || '',
+      retailPrice: cols[4] || '32.98',
+    };
+  });
+
+  flashDrop('success');
+  render();
+}
+
+function flashDrop(cls) {
+  const dz = document.getElementById('dropZone');
+  dz.classList.add(cls);
+  setTimeout(() => dz.classList.remove(cls), 1400);
+}
+
+// ── File handling ──────────────────────────────────────────
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    if (file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv')) {
+      const reader = new FileReader();
+      reader.onload = e => parseCSV(e.target.result);
+      reader.readAsText(file);
+    } else if (file.type.startsWith('image/')) {
+      state.images.push({ url: URL.createObjectURL(file), name: file.name });
+      renderImages();
+    }
+  });
+}
+
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+document.getElementById('fileInput').addEventListener('change', e => {
+  handleFiles(e.target.files);
+  e.target.value = '';
+});
+
+// ── CSV template download ──────────────────────────────────
+document.getElementById('templateLink').addEventListener('click', () => {
+  const csv = [
+    'Product Name,Units Purchased,Cost Per Unit (AUD),Units Sold,Retail Price (AUD)',
+    '12-Pack White,500,10.00,200,32.98',
+    '12-Pack Blue,100,10.00,0,32.98',
+    '60-Pack White,50,45.00,10,149.95',
+  ].join('\r\n');
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })),
+    download: 'jgg-stock-template.csv',
+  });
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// ── Init ───────────────────────────────────────────────────
+load();
+document.getElementById('stripePct').value    = state.stripePct;
+document.getElementById('stripeFixed').value  = state.stripeFixed;
+document.getElementById('shippingCost').value = state.shippingCost;
+document.getElementById('sponsorSlider').value = state.sponsorPct;
+render();
+</script>
+</body>
+</html>
