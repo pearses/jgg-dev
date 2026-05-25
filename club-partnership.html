@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JGG Club Partnership Program</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #111111;
+      --white:  #ffffff;
+      --green:  #c8e617;
+      --grey:   #f5f5f5;
+      --muted:  #555555;
+      --border: #dddddd;
+    }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    html, body {
+      background: #e0e0e0;
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page shell ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--white);
+      margin: 20px auto;
+      padding: 14mm 16mm 14mm;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .page + .page { margin-top: 0; }
+
+    @media print {
+      html, body { background: white; }
+      .page {
+        margin: 0;
+        padding: 14mm 16mm 14mm;
+        min-height: 297mm;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: avoid; }
+      .no-print { display: none !important; }
+    }
+
+    /* ── Doc header ── */
+    .doc-header {
+      background: var(--black);
+      margin: -14mm -16mm 0;
+      padding: 10mm 16mm 8mm;
+      color: var(--white);
+    }
+    .brand-line {
+      font-size: 8.5pt;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 6mm;
+      letter-spacing: 0.02em;
+    }
+    .doc-title {
+      font-size: 22pt;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 3mm;
+    }
+    .doc-title span { color: var(--green); }
+    .doc-club {
+      font-size: 13pt;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 5mm;
+      min-height: 1.4em;
+    }
+    .doc-club .club-name { color: var(--white); }
+    .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4mm; }
+    .tag {
+      display: inline-block;
+      background: var(--green);
+      color: var(--black);
+      font-size: 7.5pt;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 3px;
+    }
+    .tag-outline {
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .confidential-bar {
+      margin-top: 5mm;
+      background: rgba(255,255,255,0.08);
+      border-left: 3px solid var(--green);
+      padding: 4px 10px;
+      font-size: 7.5pt;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Body sections ── */
+    .body { flex: 1; padding-top: 7mm; }
+
+    h2 {
+      font-size: 10.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--black);
+      margin-bottom: 3mm;
+      margin-top: 6mm;
+      padding-bottom: 2mm;
+      border-bottom: 2px solid var(--green);
+      display: inline-block;
+    }
+    h2:first-child { margin-top: 0; }
+
+    p {
+      font-size: 9.5pt;
+      line-height: 1.6;
+      color: var(--black);
+      margin-bottom: 3mm;
+    }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+      margin: 3mm 0;
+    }
+    thead tr { background: var(--black); color: var(--white); }
+    thead th {
+      padding: 5px 10px;
+      text-align: left;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    tbody tr:nth-child(even) { background: var(--grey); }
+    tbody td {
+      padding: 6px 10px;
+      font-size: 9pt;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody td:not(:first-child) { text-align: right; }
+    tbody td strong { font-weight: 700; }
+    .highlight-row td { font-weight: 700; background: rgba(200,230,23,0.2) !important; }
+    .total-row td { font-weight: 800; background: var(--green) !important; color: var(--black); }
+
+    /* ── Steps ── */
+    .steps { margin: 3mm 0; }
+    .step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 3.5mm;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      background: var(--black);
+      color: var(--white);
+      border-radius: 50%;
+      font-size: 8pt;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .step-text { font-size: 9.5pt; line-height: 1.55; }
+
+    /* ── Value box ── */
+    .value-box {
+      background: var(--black);
+      color: var(--white);
+      border-radius: 6px;
+      padding: 5mm 6mm;
+      margin: 4mm 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .value-box-label { font-size: 9pt; color: rgba(255,255,255,0.6); }
+    .value-box-amount { font-size: 18pt; font-weight: 900; color: var(--green); letter-spacing: -0.03em; }
+    .value-box-sub { font-size: 7.5pt; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+    /* ── Pull quote ── */
+    .pull-quote {
+      border-left: 4px solid var(--green);
+      padding: 4mm 6mm;
+      background: var(--grey);
+      border-radius: 0 6px 6px 0;
+      margin: 4mm 0;
+    }
+    .pull-quote p { font-size: 9pt; color: var(--muted); font-style: italic; }
+
+    /* ── Bullet list ── */
+    ul.doc-list {
+      list-style: none;
+      margin: 2mm 0;
+      padding: 0;
+    }
+    ul.doc-list li {
+      font-size: 9.5pt;
+      line-height: 1.55;
+      padding-left: 14px;
+      position: relative;
+      margin-bottom: 2.5mm;
+    }
+    ul.doc-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ── FAQ ── */
+    .faq-item { margin-bottom: 3.5mm; }
+    .faq-q { font-size: 9pt; font-weight: 700; margin-bottom: 1mm; }
+    .faq-a { font-size: 9pt; color: var(--muted); line-height: 1.55; }
+
+    /* ── Two-col layout ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin: 3mm 0; }
+
+    /* ── Signature section ── */
+    .sig-section {
+      margin-top: auto;
+      padding-top: 6mm;
+    }
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8mm;
+      margin-top: 4mm;
+    }
+    .sig-block label {
+      display: block;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 10mm;
+    }
+    .sig-line {
+      border-bottom: 1.5px solid var(--black);
+      width: 100%;
+      margin-bottom: 2mm;
+    }
+    .sig-name { font-size: 8.5pt; font-weight: 600; }
+    .sig-role { font-size: 8pt; color: var(--muted); }
+
+    /* ── Footer ── */
+    .doc-footer {
+      margin: 0 -16mm -14mm;
+      padding: 4mm 16mm;
+      background: var(--grey);
+      border-top: 3px solid var(--green);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6mm;
+    }
+    .doc-footer span { font-size: 7.5pt; color: var(--muted); }
+    .doc-footer strong { color: var(--black); }
+
+    /* ── Print button ── */
+    .print-bar {
+      width: 210mm;
+      margin: 0 auto 10px;
+      text-align: right;
+    }
+    .btn-print {
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      padding: 8px 20px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-print:hover { background: #333; }
+  </style>
+</head>
+<body>
+
+<div class="print-bar no-print">
+  <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 1
+═════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="doc-header">
+    <div class="brand-line">Just Good Grips &nbsp;·&nbsp; www.justgoodgrips.com &nbsp;·&nbsp; 0468 331 309 &nbsp;·&nbsp; contact@justgoodgrips.com</div>
+    <div class="doc-title"><span>Club</span> Partnership Program</div>
+    <div class="doc-club" id="clubLine">
+      Prepared for: <span class="club-name" id="clubName">___________________________________</span>
+    </div>
+    <div class="tag-row">
+      <span class="tag">For Selected Clubs</span>
+      <span class="tag tag-outline">By Invitation Only</span>
+      <span class="tag tag-outline">Summer 2025–26</span>
+    </div>
+    <div class="confidential-bar">
+      FOR THE NOMINATED CLUB ONLY &nbsp;·&nbsp; Please do not share or forward this document
+    </div>
+  </div>
+
+  <div class="body">
+
+    <h2>About Just Good Grips</h2>
+    <p>Just Good Grips is an Australian-owned tennis brand delivering premium overgrips at a price that makes changing them a non-issue. Founded in Adelaide, we're built on the belief that players shouldn't have to think twice about replacing their grip.</p>
+    <p>Standard overgrips at major retailers run $4–$7 each — so a pack of 12 costs upwards of $60. Just Good Grips brings that down to around $2.33 per grip, making it practical to change grips as often as a player should.</p>
+
+    <h2>Welcome to the JGG Club Partnership</h2>
+    <p>We're inviting a small number of Adelaide tennis clubs to partner with us this summer. This isn't a sales arrangement — it's a genuine partnership built around your club's competitive teams.</p>
+    <p>We provide your club with free grip supply for your top players, plus a small retail allocation to sell to members. No upfront payment. No ongoing commitment to start.</p>
+
+    <div class="value-box">
+      <div>
+        <div class="value-box-label">Total retail value of stock supplied</div>
+        <div class="value-box-sub">4 × 60-pack · 2 free for team use · 2 for retail sale</div>
+      </div>
+      <div style="text-align:right">
+        <div class="value-box-amount">~$560</div>
+        <div class="value-box-sub">No upfront cost</div>
+      </div>
+    </div>
+
+    <h2>What Your Club Receives</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Purpose</th>
+          <th>RRP Value</th>
+          <th>Your Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>60-Pack Overgrips</strong></td>
+          <td>2 packs</td>
+          <td>Free — for your competitive teams</td>
+          <td>~$280</td>
+          <td><strong>$0</strong></td>
+        </tr>
+        <tr>
+          <td><strong>60-Pack Overgrips</strong></td>
+          <td>2 packs</td>
+          <td>Retail — sell to members</td>
+          <td>~$280</td>
+          <td>$120 each*</td>
+        </tr>
+        <tr class="total-row">
+          <td>Total stock</td>
+          <td>4 packs · 240 grips</td>
+          <td></td>
+          <td>~$560</td>
+          <td>Pay after 90 days*</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:8pt;color:var(--muted);margin-top:1mm">* Wholesale price payable only after stock is sold. Return unsold retail packs — no charge.</p>
+
+    <h2>How the Program Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">We drop off or ship 4 packs of 60 grips to your club within the next few days. No payment required.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>2 packs are for your competitive teams</strong> — no strings attached. Hand them to your top players and let them use them freely.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>2 packs are retail stock</strong> for your pro shop or club desk. Sell them to members at RRP — your club keeps the profit.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">After 90 days, pay the wholesale price ($120 each) for any retail packs sold, and return any unsold retail stock. That's it.</div>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <p>You only ever pay for retail stock you've already sold. The team packs are JGG's investment in your club, with no expectation of payment or reciprocal advertising.</p>
+    </div>
+
+  </div>
+
+  <div class="doc-footer">
+    <span>Just Good Grips Club Partnership Program &nbsp;·&nbsp; Summer 2025–26</span>
+    <span>Page 1 of 2</span>
+  </div>
+
+</div><!-- /page 1 -->
+
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE 2
+═════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="doc-header" style="padding-bottom:6mm">
+    <div class="brand-line">Just Good Grips &nbsp;·&nbsp; www.justgoodgrips.com &nbsp;·&nbsp; 0468 331 309 &nbsp;·&nbsp; contact@justgoodgrips.com</div>
+    <div class="doc-title" style="font-size:14pt">Pricing, Profit &amp; Agreement</div>
+  </div>
+
+  <div class="body">
+
+    <h2>Your Profit Potential</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Wholesale (your cost)</th>
+          <th>Sell Price</th>
+          <th>Your Profit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sell 2 × 60-pack at RRP</td>
+          <td>$240.00 total</td>
+          <td>~$280.00</td>
+          <td><strong>~$40</strong></td>
+        </tr>
+        <tr>
+          <td>Sell grips individually (2 × 60-pack)</td>
+          <td>~$2.00 per grip</td>
+          <td>~$4.99 each</td>
+          <td><strong>up to ~$360</strong></td>
+        </tr>
+        <tr class="highlight-row">
+          <td>Team packs (free supply — 120 grips)</td>
+          <td>$0</td>
+          <td>—</td>
+          <td><strong>Benefit in kind ~$280</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:8pt;color:var(--muted);margin-top:1mm">Individual grip sale pricing at your club's discretion. We simply ask you do not sell below the standard RRP to protect consistent pricing across partner clubs.</p>
+
+    <h2>Why We're Doing This</h2>
+    <p>Grip prices at major retailers have made regular replacement feel like a luxury. We've seen players tape over worn grips, lose games in the last set because of slippage, and coaches fight for equipment budgets that barely stretch. That's the problem Just Good Grips was built to solve.</p>
+    <p>By partnering with clubs directly, we put grips in the hands of competitive players before they hit the pro shop — and your club earns something for stocking them. It's a better model for everyone.</p>
+
+    <h2>What We Ask</h2>
+    <ul class="doc-list">
+      <li><strong>Sell retail stock at RRP only.</strong> We protect consistent pricing across all partner clubs and cannot allow undercutting.</li>
+      <li><strong>Keep team supply grips for your competitive players</strong> — not for resale or general distribution.</li>
+      <li>Be open to a restock conversation once the first batch sells through.</li>
+      <li>No social media requirement. Mention us if it feels natural; don't if it doesn't.</li>
+      <li>Do not share or forward this document to other parties.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="two-col">
+      <div>
+        <div class="faq-item">
+          <div class="faq-q">What if we don't sell the retail packs in 90 days?</div>
+          <div class="faq-a">Return them — no cost, no issue. You only pay for what you've sold.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can we sell grips individually from the 60-packs?</div>
+          <div class="faq-a">Yes. Individual sales can increase your margin significantly. Get in touch and we'll work through pricing with you.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What if the teams go through their free packs quickly?</div>
+          <div class="faq-a">Let us know and we can discuss a restock ahead of the 90-day mark.</div>
+        </div>
+      </div>
+      <div>
+        <div class="faq-item">
+          <div class="faq-q">Is there an ongoing commitment?</div>
+          <div class="faq-a">None. This is a trial. If it works for your club, we continue. If not, we part ways with no hard feelings.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Who do we contact for questions or restocking?</div>
+          <div class="faq-a">Scott directly: 0468 331 309 or contact@justgoodgrips.com. No waiting, no ticketing system.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can the team packs be used in training or comp?</div>
+          <div class="faq-a">Entirely your call. They're yours — use them however best supports your players.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sig-section">
+      <h2>Agreement</h2>
+      <p style="margin-bottom:4mm">By signing below, both parties agree to the terms and spirit of this Club Partnership Program. This document is private and prepared specifically for the nominated club.</p>
+
+      <div class="sig-grid">
+        <div class="sig-block">
+          <label>Club Representative — Name</label>
+          <div class="sig-line"></div>
+          <div class="sig-role">Print name</div>
+        </div>
+        <div class="sig-block">
+          <label>Club Representative — Signature</label>
+          <div class="sig-line"></div>
+          <div class="sig-role">Signature &amp; Date</div>
+        </div>
+        <div class="sig-block">
+          <label>Scott Pearse, Just Good Grips</label>
+          <div class="sig-line"></div>
+          <div class="sig-name">Scott Pearse</div>
+          <div class="sig-role">Founder · contact@justgoodgrips.com</div>
+        </div>
+        <div class="sig-block">
+          <label>Witness (if applicable)</label>
+          <div class="sig-line"></div>
+          <div class="sig-role">Signature &amp; Date</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="doc-footer">
+    <span><strong>Just Good Grips</strong> &nbsp;·&nbsp; ABN available on request &nbsp;·&nbsp; Adelaide, SA &nbsp;·&nbsp; justgoodgrips.com</span>
+    <span>Page 2 of 2</span>
+  </div>
+
+</div><!-- /page 2 -->
+
+<script>
+  // Personalise club name via ?club=ClubName in the URL
+  const params = new URLSearchParams(window.location.search);
+  const club = params.get('club');
+  if (club) {
+    const nameEl = document.getElementById('clubName');
+    nameEl.textContent = club;
+    document.title = 'JGG Club Partnership — ' + club;
+  }
+</script>
+
+</body>
+</html>
