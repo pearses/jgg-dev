@@ -202,6 +202,42 @@
     .value-box-amount { font-size: 18pt; font-weight: 900; color: var(--green); letter-spacing: -0.03em; }
     .value-box-sub { font-size: 7.5pt; color: rgba(255,255,255,0.45); margin-top: 2px; }
 
+    /* ── Hero statement ── */
+    .hero-statement {
+      background: var(--green);
+      border-radius: 6px;
+      padding: 5mm 6mm;
+      margin: 5mm 0 4mm;
+    }
+    .hero-statement .hs-text {
+      font-size: 13.5pt;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--black);
+    }
+    .hero-statement .hs-sub {
+      font-size: 9pt;
+      font-weight: 500;
+      color: rgba(0,0,0,0.55);
+      margin-top: 2mm;
+    }
+
+    /* ── Risk-free badge ── */
+    .risk-free-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(200,230,23,0.12);
+      border: 1.5px solid var(--green);
+      border-radius: 5px;
+      padding: 3mm 5mm;
+      margin: 3mm 0;
+    }
+    .risk-free-bar .rf-icon { font-size: 14pt; }
+    .risk-free-bar .rf-text { font-size: 9pt; font-weight: 700; }
+    .risk-free-bar .rf-sub  { font-size: 8.5pt; color: var(--muted); }
+
     /* ── Pull quote ── */
     .pull-quote {
       border-left: 4px solid var(--green);
@@ -321,8 +357,9 @@
       Prepared for: <span class="club-name" id="clubName">___________________________________</span>
     </div>
     <div class="tag-row">
-      <span class="tag">For Selected Clubs</span>
-      <span class="tag tag-outline">By Invitation Only</span>
+      <span class="tag">Team Sponsorship</span>
+      <span class="tag">100% Risk Free</span>
+      <span class="tag tag-outline">Selected Clubs Only</span>
       <span class="tag tag-outline">Summer 2025–26</span>
     </div>
     <div class="confidential-bar">
@@ -332,13 +369,27 @@
 
   <div class="body">
 
-    <h2>About Just Good Grips</h2>
-    <p>Just Good Grips is an Australian-owned tennis brand delivering premium overgrips at a price that makes changing them a non-issue. Founded in Adelaide, we're built on the belief that players shouldn't have to think twice about replacing their grip.</p>
-    <p>Standard overgrips at major retailers run $4–$7 each — so a pack of 12 costs upwards of $60. Just Good Grips brings that down to around $2.33 per grip, making it practical to change grips as often as a player should.</p>
+    <div class="hero-statement">
+      <div class="hs-text">Your top performing players shouldn't have to pay for grips. That's why we're here.</div>
+      <div class="hs-sub">Just Good Grips is backing Adelaide's competitive tennis teams — starting with yours.</div>
+    </div>
 
-    <h2>Welcome to the JGG Club Partnership</h2>
-    <p>We're inviting a small number of Adelaide tennis clubs to partner with us this summer. This isn't a sales arrangement — it's a genuine partnership built around your club's competitive teams.</p>
-    <p>We provide your club with free grip supply for your top players, plus a small retail allocation to sell to members. No upfront payment. No ongoing commitment to start.</p>
+    <h2>About Just Good Grips</h2>
+    <p>Just Good Grips is an Australian-owned tennis brand founded in Adelaide. We make premium overgrips and sell them at a price that makes replacing them a non-issue — around $2.33 per grip, compared to $4–$7 at most retailers.</p>
+    <p>We started this brand because we watched good players put up with worn grips because the cost of replacing them kept adding up. That's a problem with a straightforward fix — and this program is part of how we fix it.</p>
+
+    <h2>What This Program Is</h2>
+    <p>Every club has two groups of people who love the game. The competitive players who represent the club — and the recreational members who show up each week and make the club what it is. This program gives both groups a role to play.</p>
+    <p><strong>Your competitive teams get free grips, no strings attached.</strong> Two packs of 60 — enough to keep your top players stocked through the summer season.</p>
+    <p><strong>Your recreational members get access to a locally owned Australian grip at a fair price,</strong> available right through their club. Every pack they buy goes directly towards keeping your competitive players in fresh grips. It's a simple, feel-good loop that doesn't cost the club a cent to start.</p>
+
+    <div class="risk-free-bar">
+      <div class="rf-icon">🛡</div>
+      <div>
+        <div class="rf-text">Completely risk free for your club</div>
+        <div class="rf-sub">No upfront payment · Return unsold stock · Pay only for what you sell · No ongoing commitment</div>
+      </div>
+    </div>
 
     <div class="value-box">
       <div>
@@ -409,7 +460,7 @@
     </div>
 
     <div class="pull-quote">
-      <p>You only ever pay for retail stock you've already sold. The team packs are JGG's investment in your club, with no expectation of payment or reciprocal advertising.</p>
+      <p>When a club member buys a pack of Just Good Grips, they're not just buying a grip — they're chipping in for the players who represent their club. That's the idea behind this program, and it costs your club nothing to make it happen.</p>
     </div>
 
   </div>
@@ -468,8 +519,9 @@
     <p style="font-size:8pt;color:var(--muted);margin-top:1mm">Individual grip sale pricing at your club's discretion. We simply ask you do not sell below the standard RRP to protect consistent pricing across partner clubs.</p>
 
     <h2>Why We're Doing This</h2>
-    <p>Grip prices at major retailers have made regular replacement feel like a luxury. We've seen players tape over worn grips, lose games in the last set because of slippage, and coaches fight for equipment budgets that barely stretch. That's the problem Just Good Grips was built to solve.</p>
-    <p>By partnering with clubs directly, we put grips in the hands of competitive players before they hit the pro shop — and your club earns something for stocking them. It's a better model for everyone.</p>
+    <p>Competitive players change grips constantly — or they should. In reality, most don't, because at $5–$7 a grip, it adds up fast. A worn grip affects feel, control, and confidence at exactly the wrong moment.</p>
+    <p>Just Good Grips was built to remove that barrier. At around $2.33 per grip, replacing them regularly becomes normal again — the way it should be.</p>
+    <p>By placing free stock directly with clubs, we get grips into the hands of competitive players at no cost to them or their club. The retail packs make that sustainable — recreational members buy a quality, locally made Australian grip through their club, and the proceeds flow back into keeping the top players stocked. Everyone wins, and the club is at the centre of it.</p>
 
     <h2>What We Ask</h2>
     <ul class="doc-list">
