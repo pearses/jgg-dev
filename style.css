@@ -797,10 +797,28 @@ a {
   color: var(--black);
 }
 
+.store-note {
+  font-size: 0.75rem;
+  color: var(--grey-400);
+  font-style: italic;
+}
+
 .store-address {
   font-size: 0.8125rem;
   color: var(--grey-600);
   line-height: 1.5;
+}
+
+.store-map-link {
+  font-size: 0.8125rem;
+  color: var(--grey-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-top: 4px;
+}
+
+.store-map-link:hover {
+  color: var(--black);
 }
 
 .stores-map {
